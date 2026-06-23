@@ -1,4 +1,4 @@
-import Spinner from './Spinner'
+import Spinner from './spinner'
 
 export default function Button({
   children, onClick, type = 'button', variant = 'primary',
