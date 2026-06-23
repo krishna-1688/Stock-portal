@@ -4,12 +4,13 @@ import { useAuth } from '../../context/authContext'
 import { getRecentSubmissions } from '../../services/stockService'
 import { getActiveAgencies } from '../../services/agencyService'
 import Spinner from '../../components/ui/spinner'
+import AdminBottomNav from '../../components/layout/AdminBottomNav'
 
 export default function History() {
   const navigate = useNavigate()
   const { logout } = useAuth()
   const [submissions, setSubmissions] = useState([])
-  const [agencies, setAgencies] = useState([])
+  const [agencies, setAgencies]       = useState([])
   const [selectedAgency, setSelectedAgency] = useState('all')
   const [loading, setLoading] = useState(true)
 
@@ -106,7 +107,7 @@ export default function History() {
           </div>
         </div>
 
-        {/* Submissions grouped by date */}
+        {/* Submissions */}
         {loading ? (
           <div className="flex justify-center py-16"><Spinner /></div>
         ) : Object.keys(grouped).length === 0 ? (
@@ -159,33 +160,7 @@ export default function History() {
         )}
       </div>
 
-      {/* Bottom Nav */}
-      <div className="fixed bottom-0 left-0 right-0 z-40 px-4 pb-4">
-        <div className="max-w-lg mx-auto">
-          <nav className="bg-white/90 backdrop-blur-xl rounded-3xl shadow-2xl shadow-black/10 border border-gray-100 flex justify-around py-2 px-2">
-            {[
-              { icon: '📊', label: 'Dashboard', path: '/admin/dashboard' },
-              {icon: '🏪', label:'Agencies',path:'/admin/agencies' },
-              { icon: '✅', label: 'Status', path: '/admin/status' },
-              { icon: '📋', label: 'History', path: '/admin/history' },
-            ].map(item => {
-              const active = window.location.pathname === item.path
-              return (
-                <button
-                  key={item.path}
-                  onClick={() => navigate(item.path)}
-                  className={`flex flex-col items-center gap-1 px-5 py-2 rounded-2xl transition-all duration-200 ${
-                    active ? 'bg-brand-600 shadow-lg shadow-brand-600/30' : 'hover:bg-gray-50'
-                  }`}
-                >
-                  <span className="text-lg">{item.icon}</span>
-                  <span className={`text-xs font-bold ${active ? 'text-white' : 'text-gray-400'}`}>{item.label}</span>
-                </button>
-              )
-            })}
-          </nav>
-        </div>
-      </div>
+      <AdminBottomNav />
     </div>
   )
 }

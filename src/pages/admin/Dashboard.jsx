@@ -1,16 +1,14 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../../context/authContext'
-import { getAdminCounts } from '../../services/stockService'
-import { getAgencyStatus } from '../../services/stockService'
+import { getAdminCounts, getAgencyStatus } from '../../services/stockService'
 import Spinner from '../../components/ui/spinner'
+import AdminBottomNav from '../../components/layout/AdminBottomNav'
 
 function StatCard({ icon, label, value, from, to }) {
   return (
-    <div
-      className="relative overflow-hidden rounded-3xl p-5 shadow-lg"
-      style={{ background: `linear-gradient(135deg, ${from}, ${to})` }}
-    >
+    <div className="relative overflow-hidden rounded-3xl p-5 shadow-lg"
+      style={{ background: `linear-gradient(135deg, ${from}, ${to})` }}>
       <div className="absolute -right-6 -top-6 w-28 h-28 rounded-full bg-white/10" />
       <div className="absolute -right-2 bottom-2 w-16 h-16 rounded-full bg-black/10" />
       <div className="relative">
@@ -75,13 +73,10 @@ export default function AdminDashboard() {
   }, [])
 
   const submittedToday = statusList.filter(s => s.submitted_today).length
-  const pendingToday = statusList.length - submittedToday
-  const pct = statusList.length ? Math.round((submittedToday / statusList.length) * 100) : 0
+  const pendingToday   = statusList.length - submittedToday
+  const pct            = statusList.length ? Math.round((submittedToday / statusList.length) * 100) : 0
 
-  const handleLogout = async () => {
-    await logout()
-    navigate('/login')
-  }
+  const handleLogout = async () => { await logout(); navigate('/login') }
 
   return (
     <div className="min-h-screen bg-[#F5F6FA]">
@@ -138,7 +133,6 @@ export default function AdminDashboard() {
             </h1>
             <p className="text-white/50 text-sm mt-3">{dateStr}</p>
 
-            {/* Today's progress strip */}
             {!loading && statusList.length > 0 && (
               <div className="mt-5">
                 <div className="flex items-center justify-between mb-2">
@@ -146,10 +140,8 @@ export default function AdminDashboard() {
                   <p className="text-white font-black text-sm">{submittedToday}/{statusList.length}</p>
                 </div>
                 <div className="w-full rounded-full overflow-hidden" style={{ height: 6, background: 'rgba(255,255,255,0.15)' }}>
-                  <div
-                    className="h-full rounded-full transition-all duration-700"
-                    style={{ width: `${pct}%`, background: 'linear-gradient(90deg, #60a5fa, #3b82f6)' }}
-                  />
+                  <div className="h-full rounded-full transition-all duration-700"
+                    style={{ width: `${pct}%`, background: 'linear-gradient(90deg, #60a5fa, #3b82f6)' }} />
                 </div>
                 <div className="grid grid-cols-2 gap-2 mt-3">
                   <div className="bg-white/10 backdrop-blur rounded-2xl p-3 text-center">
@@ -173,7 +165,7 @@ export default function AdminDashboard() {
         ) : (
           <div className="grid grid-cols-2 gap-3 mb-7">
             <StatCard icon="🏪" label="Agencies" value={counts?.total_agencies} from="#16a34a" to="#15803d" />
-            <StatCard icon="📦" label="Products" value={counts?.total_products} from="#f59e0b" to="#d97706" />
+            <StatCard icon="📦" label="Products"  value={counts?.total_products}  from="#f59e0b" to="#d97706" />
             <div className="col-span-2 relative overflow-hidden rounded-3xl p-5 shadow-lg"
               style={{ background: 'linear-gradient(135deg, #6366f1, #4338ca)' }}>
               <div className="absolute -right-8 -top-8 w-36 h-36 rounded-full bg-white/10" />
@@ -183,9 +175,7 @@ export default function AdminDashboard() {
                   <p className="text-4xl font-black text-white">{counts?.total_submissions ?? '—'}</p>
                   <p className="text-white/70 text-xs font-semibold mt-1 uppercase tracking-wider">Stock Submissions</p>
                 </div>
-                <div className="w-16 h-16 rounded-3xl bg-white/15 backdrop-blur flex items-center justify-center text-4xl shadow-inner">
-                  📋
-                </div>
+                <div className="w-16 h-16 rounded-3xl bg-white/15 backdrop-blur flex items-center justify-center text-4xl shadow-inner">📋</div>
               </div>
             </div>
           </div>
@@ -209,33 +199,7 @@ export default function AdminDashboard() {
         </div>
       </div>
 
-      {/* Bottom Nav */}
-      <div className="fixed bottom-0 left-0 right-0 z-40 px-4 pb-4">
-        <div className="max-w-lg mx-auto">
-          <nav className="bg-white/90 backdrop-blur-xl rounded-3xl shadow-2xl shadow-black/10 border border-gray-100 flex justify-around py-2 px-2">
-            {[
-              { icon: '📊', label: 'Dashboard', path: '/admin/dashboard' },
-              {icon: '🏪', label:'Agencies',path:'/admin/agencies' },
-              { icon: '✅', label: 'Status', path: '/admin/status' },
-              { icon: '📋', label: 'History', path: '/admin/history' },
-              
-            ].map(item => {
-              const active = window.location.pathname === item.path
-              return (
-                <button
-                  key={item.path}
-                  onClick={() => navigate(item.path)}
-                  className={`flex flex-col items-center gap-1 px-5 py-2 rounded-2xl transition-all duration-200 ${
-                    active ? 'bg-brand-600 shadow-lg shadow-brand-600/30' : 'hover:bg-gray-50'
-                  }`}
-                >
-                  <span className="text-lg">{item.icon}</span>
-                  <span className={`text-xs font-bold ${active ? 'text-white' : 'text-gray-400'}`}>{item.label}</span>
-                </button>
-              )
-            })}
-          </nav>
-        </div>
-      </div>
+      <AdminBottomNav />
     </div>
-  ) }
+  )
+}

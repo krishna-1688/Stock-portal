@@ -2,42 +2,7 @@ import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { getAllAgenciesAdmin } from '../../services/agencyService'
 import Spinner from '../../components/ui/spinner'
-
-// Shared bottom nav items — update here to reflect everywhere
-export const ADMIN_NAV = [
-  { icon: '📊', label: 'Dashboard', path: '/admin/dashboard' },
-  { icon: '🏪', label: 'Agencies',  path: '/admin/agencies' },
-  { icon: '✅', label: 'Status',    path: '/admin/status' },
-  { icon: '📋', label: 'History',   path: '/admin/history' },
-]
-
-export function AdminBottomNav() {
-  const navigate = useNavigate()
-  const path = window.location.pathname
-  return (
-    <div className="fixed bottom-0 left-0 right-0 z-40 px-4 pb-4">
-      <div className="max-w-lg mx-auto">
-        <nav className="bg-white/90 backdrop-blur-xl rounded-3xl shadow-2xl shadow-black/10 border border-gray-100 flex justify-around py-2 px-2">
-          {ADMIN_NAV.map(item => {
-            const active = path === item.path
-            return (
-              <button
-                key={item.path}
-                onClick={() => navigate(item.path)}
-                className={`flex flex-col items-center gap-1 px-4 py-2 rounded-2xl transition-all duration-200 ${
-                  active ? 'bg-brand-600 shadow-lg shadow-brand-600/30' : 'hover:bg-gray-50'
-                }`}
-              >
-                <span className="text-lg">{item.icon}</span>
-                <span className={`text-xs font-bold ${active ? 'text-white' : 'text-gray-400'}`}>{item.label}</span>
-              </button>
-            )
-          })}
-        </nav>
-      </div>
-    </div>
-  )
-}
+import AdminBottomNav from '../../components/layout/AdminBottomNav'
 
 export default function AdminAgencies() {
   const navigate = useNavigate()
@@ -56,15 +21,23 @@ export default function AdminAgencies() {
     a.is_active && (!search || a.name.toLowerCase().includes(search.toLowerCase()))
   )
 
-  const waReady  = agencies.filter(a => a.is_active && a.whatsapp_number).length
-  const total    = agencies.filter(a => a.is_active).length
+  const waReady = agencies.filter(a => a.is_active && a.whatsapp_number).length
+  const total   = agencies.filter(a => a.is_active).length
 
   return (
     <div className="min-h-screen bg-[#F5F6FA]">
 
       {/* Top Bar */}
       <div className="bg-white/80 backdrop-blur-md border-b border-gray-100 sticky top-0 z-40">
-        <div className="max-w-lg mx-auto px-5 h-16 flex items-center justify-between">
+        <div className="max-w-lg mx-auto px-5 h-16 flex items-center gap-3">
+          <button
+            onClick={() => navigate('/admin/dashboard')}
+            className="w-9 h-9 rounded-xl bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition-colors shrink-0"
+          >
+            <svg className="w-4 h-4 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+            </svg>
+          </button>
           <div>
             <p className="text-sm font-black text-gray-900 leading-none">Agencies</p>
             <p className="text-xs text-gray-400 leading-none mt-0.5">{total} active · {waReady} WhatsApp ready</p>
