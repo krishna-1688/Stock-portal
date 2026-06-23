@@ -2,9 +2,9 @@ import { useEffect, useState, useCallback } from 'react'
 import { useNavigate, useParams, useLocation } from 'react-router-dom'
 import { getProductsByAgency } from '../../services/productService'
 import { submitStock, getTodaySubmission } from '../../services/stockService'
-import Modal from '../../components/ui/Modal'
-import Button from '../../components/ui/Button'
-import Spinner from '../../components/ui/Spinner'
+import Modal from '../../components/ui/modal'
+import Button from '../../components/ui/button'
+import Spinner from '../../components/ui/spinner'
 import PageShell from '../../components/layout/PageShell'
 
 const DRAFT_KEY = (agencyId) => `stock_draft_${agencyId}`

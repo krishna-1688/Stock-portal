@@ -6,10 +6,10 @@ import {
   updateAgency,
   deleteAgency,
 } from '../../services/agencyService'
-import Modal from '../../components/ui/Modal'
-import Button from '../../components/ui/Button'
-import Spinner from '../../components/ui/Spinner'
-import Alert from '../../components/ui/Alert'
+import Modal from '../../components/ui/modal'
+import Button from '../../components/ui/button'
+import Spinner from '../../components/ui/spinner'
+import Alert from '../../components/ui/alert'
 
 function Field({ label, hint, children }) {
   return (

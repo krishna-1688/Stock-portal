@@ -3,7 +3,7 @@ import { useNavigate, useParams, useLocation } from 'react-router-dom'
 import { getProductsByAgency } from '../../services/productService'
 import { getAllAgenciesAdmin } from '../../services/agencyService'
 import { getAgencyProductsWithQty } from '../../services/stockService'
-import Spinner from '../../components/ui/Spinner'
+import Spinner from '../../components/ui/spinner'
 
 // ── Units ─────────────────────────────────────────────────────────────────────
 const UNITS = ['pcs', 'carton', 'dozen', 'half dozen', 'kg', 'g', 'litre', 'ml', 'pack', 'box', 'bag']

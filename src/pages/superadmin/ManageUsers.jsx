@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { useAuth } from '../../context/AuthContext'
+import { useAuth } from '../../context/authContext'
 import {
   getUsers,
   createUser,
@@ -8,10 +8,10 @@ import {
   resetPassword,
   deleteUser,
 } from '../../services/userService'
-import Modal from '../../components/ui/Modal'
-import Button from '../../components/ui/Button'
-import Spinner from '../../components/ui/Spinner'
-import Alert from '../../components/ui/Alert'
+import Modal from '../../components/ui/modal'
+import Button from '../../components/ui/button'
+import Spinner from '../../components/ui/spinner'
+import Alert from '../../components/ui/alert'
 
 // ─── helpers ────────────────────────────────────────────────────────────────
 

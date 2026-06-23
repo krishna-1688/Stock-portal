@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { getAllAgenciesAdmin } from '../../services/agencyService'
-import Spinner from '../../components/ui/Spinner'
+import Spinner from '../../components/ui/spinner'
 
 // Shared bottom nav items — update here to reflect everywhere
 export const ADMIN_NAV = [

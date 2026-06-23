@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { getSubmissionDetail } from '../../services/stockService'
-import Spinner from '../../components/ui/Spinner'
+import Spinner from '../../components/ui/spinner'
 
 export default function SubmissionDetail() {
   const { submissionId } = useParams()

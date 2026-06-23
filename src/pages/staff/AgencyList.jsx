@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { useAuth } from '../../context/AuthContext'
+import { useAuth } from '../../context/authContext'
 import { getActiveAgencies } from '../../services/agencyService'
-import Spinner from '../../components/ui/Spinner'
+import Spinner from '../../components/ui/spinner'
 import PageShell from '../../components/layout/PageShell'
 
 const GRADIENTS = [

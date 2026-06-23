@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import PageShell from '../../components/layout/PageShell'
-import Spinner from '../../components/ui/Spinner'
+import Spinner from '../../components/ui/spinner'
 import { getStaffSubmissionHistory } from '../../services/stockService'
 
 export default function SubmissionHistory() {

@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { useAuth } from '../../context/AuthContext'
+import { useAuth } from '../../context/authContext'
 import { getRecentSubmissions } from '../../services/stockService'
 import { getActiveAgencies } from '../../services/agencyService'
-import Spinner from '../../components/ui/Spinner'
+import Spinner from '../../components/ui/spinner'
 
 export default function History() {
   const navigate = useNavigate()

@@ -1,8 +1,8 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { useAuth } from '../context/AuthContext'
-import Button from '../components/ui/Button'
-import Alert from '../components/ui/Alert'
+import { useAuth } from '../context/authContext'
+import Button from '../components/ui/button'
+import Alert from '../components/ui/alert'
 
 export default function Login() {
   const [username, setUsername] = useState('')

@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { useAuth } from '../../context/AuthContext'
+import { useAuth } from '../../context/authContext'
 import { getAdminCounts } from '../../services/stockService'
 import { getAgencyStatus } from '../../services/stockService'
-import Spinner from '../../components/ui/Spinner'
+import Spinner from '../../components/ui/spinner'
 
 function StatCard({ icon, label, value, from, to }) {
   return (
