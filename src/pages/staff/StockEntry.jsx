@@ -75,7 +75,6 @@ export default function StockEntry() {
   const [toast, setToast] = useState('')
   const [toastType, setToastType] = useState('success')
 
-  // draft / prefill state
   const [hasDraft, setHasDraft] = useState(false)
   const [isAlreadySubmitted, setIsAlreadySubmitted] = useState(false)
   const [showDraftPrompt, setShowDraftPrompt] = useState(false)
@@ -97,15 +96,12 @@ export default function StockEntry() {
         const draft = loadDraft(agencyId)
 
         if (todayData && todayData.length > 0) {
-          // Already submitted today — pre-fill with submitted values
           setIsAlreadySubmitted(true)
           const submittedQtys = {}
           for (const item of todayData) {
             submittedQtys[item.product_id] = item.quantity
           }
-
           if (draft && Object.keys(draft).length > 0) {
-            // Both draft and today's submission exist — ask user
             setPendingDraft(draft)
             setQuantities(submittedQtys)
             setShowDraftPrompt(true)
@@ -113,7 +109,6 @@ export default function StockEntry() {
             setQuantities(submittedQtys)
           }
         } else {
-          // Not submitted today — check for draft
           if (draft && Object.keys(draft).length > 0) {
             setQuantities(draft)
             setHasDraft(true)
@@ -210,7 +205,7 @@ export default function StockEntry() {
 
         <div className="max-w-2xl mx-auto px-4 pt-4 flex flex-col gap-4">
 
-          {/* Draft prompt — only when draft exists on top of today's submission */}
+          {/* Draft prompt */}
           {showDraftPrompt && (
             <div className="bg-amber-50 border border-amber-200 rounded-2xl p-4">
               <p className="text-sm font-bold text-amber-800 mb-1">📝 Unsaved draft found</p>
@@ -219,25 +214,13 @@ export default function StockEntry() {
               </p>
               <div className="flex gap-2">
                 <button
-                  onClick={() => {
-                    setQuantities(pendingDraft)
-                    setHasDraft(true)
-                    setShowDraftPrompt(false)
-                  }}
+                  onClick={() => { setQuantities(pendingDraft); setHasDraft(true); setShowDraftPrompt(false) }}
                   className="flex-1 py-2 rounded-xl bg-amber-500 text-white text-xs font-bold"
-                >
-                  Use Draft
-                </button>
+                >Use Draft</button>
                 <button
-                  onClick={() => {
-                    clearDraft(agencyId)
-                    setPendingDraft(null)
-                    setShowDraftPrompt(false)
-                  }}
+                  onClick={() => { clearDraft(agencyId); setPendingDraft(null); setShowDraftPrompt(false) }}
                   className="flex-1 py-2 rounded-xl bg-white border border-amber-200 text-amber-700 text-xs font-bold"
-                >
-                  Keep Submitted
-                </button>
+                >Keep Submitted</button>
               </div>
             </div>
           )}
@@ -310,7 +293,7 @@ export default function StockEntry() {
             </div>
           )}
 
-          {/* Product list */}
+          {/* ── Product list ── */}
           {loading ? (
             <div className="flex justify-center py-16"><Spinner /></div>
           ) : products.length === 0 ? (
@@ -324,27 +307,42 @@ export default function StockEntry() {
                 const qty = quantities[product.id] ?? 0
                 const filled = qty > 0
                 return (
-                  <div key={product.id}
-                    className="bg-white rounded-2xl border transition-all duration-150"
-                    style={{ borderColor: filled ? '#bbf7d0' : '#f1f5f9' }}>
-                    <div className="flex items-center gap-4 px-4 py-3.5">
-                      <div className="w-9 h-9 rounded-xl flex items-center justify-center text-xs font-black shrink-0 transition-all duration-200"
+                  <div
+                    key={product.id}
+                    className="bg-white rounded-2xl border transition-all duration-150 px-4 py-3.5"
+                    style={{ borderColor: filled ? '#bbf7d0' : '#f1f5f9' }}
+                  >
+                    {/* ── Row 1: index badge + product name ── */}
+                    <div className="flex items-center gap-3 mb-3">
+                      <div
+                        className="w-7 h-7 rounded-lg flex items-center justify-center text-xs font-black shrink-0 transition-all duration-200"
                         style={{
-                          background: filled ? 'linear-gradient(135deg,#16a34a,#15803d)' : '#f8fafc',
-                          color: filled ? '#fff' : '#94a3b8'
-                        }}>
+                          background: filled ? 'linear-gradient(135deg,#16a34a,#15803d)' : '#f1f5f9',
+                          color: filled ? '#fff' : '#94a3b8',
+                          minWidth: '1.75rem',
+                        }}
+                      >
                         {filled ? (
-                          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                          <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
                             <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                           </svg>
                         ) : i + 1}
                       </div>
-                      <div className="flex-1 min-w-0">
-                        <p className="text-sm font-bold text-gray-900 truncate">{product.name}</p>
-                        {filled && (
-                          <p className="text-xs text-brand-600 font-semibold mt-0.5">{qty} unit{qty !== 1 ? 's' : ''}</p>
-                        )}
-                      </div>
+                      {/* Name now has full remaining width — no truncation needed */}
+                      <p className="text-sm font-bold text-gray-900 leading-snug flex-1">
+                        {product.name}
+                      </p>
+                    </div>
+
+                    {/* ── Row 2: stepper aligned to right ── */}
+                    <div className="flex items-center justify-between">
+                      {filled ? (
+                        <span className="text-xs text-brand-600 font-semibold">
+                          {qty} unit{qty !== 1 ? 's' : ''}
+                        </span>
+                      ) : (
+                        <span className="text-xs text-gray-300 font-medium">tap + to fill</span>
+                      )}
                       <QtyInput value={qty} onChange={v => setQty(product.id, v)} />
                     </div>
                   </div>
