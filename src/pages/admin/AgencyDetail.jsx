@@ -8,6 +8,11 @@ import AdminBottomNav from '../../components/layout/AdminBottomNav'
 
 const UNITS = ['pcs', 'carton', 'dozen', 'half dozen', 'kg', 'gm', 'litre', 'ml', 'pack', 'box', 'bag']
 
+const ORDER_KEY  = (id) => `order_draft_${id}`
+const saveOrder  = (id, o) => localStorage.setItem(ORDER_KEY(id), JSON.stringify(o))
+const loadOrder  = (id) => { try { const r = localStorage.getItem(ORDER_KEY(id)); return r ? JSON.parse(r) : {} } catch { return {} } }
+const clearOrder = (id) => localStorage.removeItem(ORDER_KEY(id))
+
 function ProductRow({ product, stockQty, order, onChange }) {
   const qty  = order?.qty  ?? 0
   const unit = order?.unit ?? 'pcs'
@@ -25,11 +30,8 @@ function ProductRow({ product, stockQty, order, onChange }) {
 
   return (
     <div className={`bg-white rounded-[20px] border transition-all duration-200 ${
-      isOrdered
-        ? 'border-[#25D366]/40 shadow-md shadow-green-100'
-        : 'border-gray-100 shadow-sm'
+      isOrdered ? 'border-[#25D366]/40 shadow-md shadow-green-100' : 'border-gray-100 shadow-sm'
     }`}>
-      {/* product name row */}
       <div className="px-4 pt-3.5 pb-2 flex items-center gap-3">
         <div className={`w-9 h-9 rounded-xl flex items-center justify-center text-sm shrink-0 transition-colors ${
           isOrdered ? 'bg-[#25D366]/10' : 'bg-gray-50'
@@ -48,9 +50,7 @@ function ProductRow({ product, stockQty, order, onChange }) {
         )}
       </div>
 
-      {/* stock + order row */}
       <div className="px-4 pb-3.5 flex items-center gap-2">
-        {/* stock badge */}
         <div className={`rounded-xl px-3 py-2 min-w-[64px] ${stockLow ? 'bg-red-50' : 'bg-gray-50'}`}>
           <span className={`text-[10px] font-black uppercase tracking-wider block leading-none ${stockLow ? 'text-red-400' : 'text-gray-400'}`}>
             In stock
@@ -65,7 +65,6 @@ function ProductRow({ product, stockQty, order, onChange }) {
           <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
         </svg>
 
-        {/* order controls */}
         <div className="flex items-center gap-1.5 flex-1 justify-end">
           <button
             onClick={() => setQty(qty - 1)}
@@ -123,6 +122,7 @@ export default function AgencyDetail() {
   const [order, setOrder]       = useState({})
   const [toast, setToast]       = useState('')
   const [search, setSearch]     = useState('')
+  const [hasDraft, setHasDraft] = useState(false)
 
   const agencyNameFromState = location.state?.agencyName
 
@@ -139,13 +139,30 @@ export default function AgencyDetail() {
         const map = {}
         ;(stockRows ?? []).forEach(row => { map[row.product_id] = row.quantity })
         setStockMap(map)
+
+        // restore saved draft order
+        const saved = loadOrder(agencyId)
+        if (Object.keys(saved).length > 0) {
+          setOrder(saved)
+          setHasDraft(true)
+        }
       })
       .catch(console.error)
       .finally(() => setLoading(false))
   }, [agencyId])
 
   const handleChange = (productId, val) =>
-    setOrder(prev => ({ ...prev, [productId]: val }))
+    setOrder(prev => {
+      const updated = { ...prev, [productId]: val }
+      saveOrder(agencyId, updated)
+      return updated
+    })
+
+  const handleClearAll = () => {
+    setOrder({})
+    setHasDraft(false)
+    clearOrder(agencyId)
+  }
 
   const orderedItems = products
     .filter(p => (order[p.id]?.qty ?? 0) > 0)
@@ -167,6 +184,11 @@ export default function AgencyDetail() {
     const message    = `🛒 *Order from Sampath Super Market*\n📅 ${date}\n🏪 ${agencyName}\n\n${lines}\n\nThank you!`
 
     window.open(`https://wa.me/${waNumber}?text=${encodeURIComponent(message)}`, '_blank')
+
+    // clear draft after sending
+    clearOrder(agencyId)
+    setHasDraft(false)
+    setOrder({})
   }
 
   const displayName    = agency?.name ?? agencyNameFromState ?? 'Agency'
@@ -197,14 +219,17 @@ export default function AgencyDetail() {
             </button>
             <div>
               <p className="text-sm font-black text-gray-900 leading-none">{displayName}</p>
-              <p className="text-xs text-gray-400 leading-none mt-0.5">
-                {submittedToday ? 'Stock submitted ✅' : 'No submission yet'}
+              <p className="text-xs leading-none mt-0.5">
+                {hasDraft
+                  ? <span className="text-amber-500 font-semibold">📝 Draft restored</span>
+                  : <span className="text-gray-400">{submittedToday ? 'Stock submitted ✅' : 'No submission yet'}</span>
+                }
               </p>
             </div>
           </div>
           {totalItems > 0 && (
             <button
-              onClick={() => setOrder({})}
+              onClick={handleClearAll}
               className="text-xs font-bold text-red-500 hover:text-red-600 px-3 py-1.5 rounded-xl hover:bg-red-50 transition-colors"
             >
               Clear all
@@ -259,7 +284,7 @@ export default function AgencyDetail() {
           </div>
         )}
 
-        {/* search — only show if more than 8 products */}
+        {/* search */}
         {!loading && products.length > 8 && (
           <div className="relative mb-4">
             <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -310,11 +335,11 @@ export default function AgencyDetail() {
         )}
       </div>
 
-      {/* whatsapp sticky bar — sits above bottom nav */}
+      {/* whatsapp sticky bar */}
       <div className="fixed bottom-16 left-0 right-0 z-30 px-4 pb-3 pt-2"
         style={{ background: 'linear-gradient(to top, #F5F6FA 70%, transparent)' }}>
         <div className="max-w-lg mx-auto">
-          <div className="bg-white/95 backdrop-blur-xl rounded-3xl shadow-xl shadow-black/8 border border-gray-100 p-3.5">
+          <div className="bg-white/95 backdrop-blur-xl rounded-3xl shadow-xl border border-gray-100 p-3.5">
             {totalItems > 0 ? (
               <div className="flex items-center gap-2 mb-3 flex-wrap">
                 <div className="px-3 py-1.5 bg-brand-50 rounded-xl">
