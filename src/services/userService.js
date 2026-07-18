@@ -34,6 +34,21 @@ export const resetPassword = async (userId, newPassword) =>
     p_new_password: newPassword
   }))
 
+// SOFT DELETE — deactivates user, kills their sessions
+export const deactivateUser = async (userId) =>
+  unwrap(await supabase.rpc('deactivate_user', {
+    p_token: getToken(),
+    p_user_id: userId
+  }))
+
+// REACTIVATE — brings a deactivated user back
+export const reactivateUser = async (userId) =>
+  unwrap(await supabase.rpc('reactivate_user', {
+    p_token: getToken(),
+    p_user_id: userId
+  }))
+
+// Keep old deleteUser for users with zero submissions (optional)
 export const deleteUser = async (userId) =>
   unwrap(await supabase.rpc('delete_user', {
     p_token: getToken(),

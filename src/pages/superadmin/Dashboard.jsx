@@ -231,6 +231,7 @@ export default function SuperDashboard() {
             description="See which agencies are updated or pending"
             iconBg="bg-gradient-to-br from-emerald-100 to-green-50"
             onClick={() => navigate('/admin/status')}
+            
           />
           <ActionCard
             icon="📊" label="Submission History"
