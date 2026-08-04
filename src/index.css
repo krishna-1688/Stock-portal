@@ -2,16 +2,16 @@
 @tailwind components;
 @tailwind utilities;
 
-html, body, #root {
-  height: 100%;
-}
+html, body, #root { height: 100%; }
 
 body {
   font-family: 'Inter', system-ui, sans-serif;
   -webkit-tap-highlight-color: transparent;
+  background: #F8F9FA;
+  color: #1A1D23;
 }
 
 input[type='number']::-webkit-inner-spin-button,
-input[type='number']::-webkit-outer-spin-button {
-  opacity: 1;
-}
+input[type='number']::-webkit-outer-spin-button { opacity: 1; }
+
+* { -webkit-font-smoothing: antialiased; }

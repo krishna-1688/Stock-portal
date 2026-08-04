@@ -1,34 +1,26 @@
 import { useNavigate } from 'react-router-dom'
 
 const ADMIN_NAV = [
-  { icon: '📊', label: 'Dashboard', path: '/admin/dashboard' },
-  { icon: '🏪', label: 'Agencies',  path: '/admin/agencies'  },
-  { icon: '✅', label: 'Status',    path: '/admin/status'    },
-  { icon: '📋', label: 'History',   path: '/admin/history'   },
+  { label: 'Dashboard', path: '/admin/dashboard', icon: <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg> },
+  { label: 'Agencies',  path: '/admin/agencies',  icon: <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}><path strokeLinecap="round" strokeLinejoin="round" d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><path strokeLinecap="round" strokeLinejoin="round" d="M9 22V12h6v10"/></svg> },
+  { label: 'Status',    path: '/admin/status',    icon: <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}><path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg> },
+  { label: 'History',   path: '/admin/history',   icon: <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}><path strokeLinecap="round" strokeLinejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg> },
 ]
 
 export default function AdminBottomNav() {
   const navigate = useNavigate()
   const path = window.location.pathname
-
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-40 px-4 pb-4">
+    <div className="fixed bottom-0 left-0 right-0 z-40">
       <div className="max-w-lg mx-auto">
-        <nav className="bg-white/90 backdrop-blur-xl rounded-3xl shadow-2xl shadow-black/10 border border-gray-100 flex justify-around py-2 px-2">
+        <nav className="bg-white border-t border-slate-100 flex justify-around px-2 py-1">
           {ADMIN_NAV.map(item => {
             const active = path === item.path
             return (
-              <button
-                key={item.path}
-                onClick={() => navigate(item.path)}
-                className={`flex flex-col items-center gap-1 px-4 py-2 rounded-2xl transition-all duration-200 ${
-                  active ? 'bg-brand-600 shadow-lg shadow-brand-600/30' : 'hover:bg-gray-50'
-                }`}
-              >
-                <span className="text-lg leading-none">{item.icon}</span>
-                <span className={`text-[11px] font-bold leading-none ${active ? 'text-white' : 'text-gray-400'}`}>
-                  {item.label}
-                </span>
+              <button key={item.path} onClick={() => navigate(item.path)}
+                className={`flex flex-col items-center gap-1 px-4 py-2 rounded-xl transition-all duration-150 ${active ? 'text-brand-600' : 'text-slate-400 hover:text-slate-600'}`}>
+                {item.icon}
+                <span className={`text-[10px] font-medium ${active ? 'text-brand-600' : 'text-slate-400'}`}>{item.label}</span>
               </button>
             )
           })}

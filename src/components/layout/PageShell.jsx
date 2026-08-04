@@ -1,13 +1,8 @@
-import Navbar from './Navbar'
 import BottomNav from './BottomNav'
-
-export default function PageShell({ title, children }) {
+export default function PageShell({ children }) {
   return (
-    <div className="min-h-screen bg-gray-50">
-      <Navbar title={title} />
-      <main className="max-w-2xl mx-auto px-4 py-6 pb-24">
-        {children}
-      </main>
+    <div className="min-h-screen bg-slate-50">
+      <main>{children}</main>
       <BottomNav />
     </div>
   )

@@ -10,80 +10,67 @@ export default function SubmissionHistory() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    const loadHistory = async () => {
-      try {
-        const data = await getStaffSubmissionHistory()
-        setHistory(data || [])
-      } catch (e) {
-        console.error('Error loading history:', e)
-      } finally {
-        setLoading(false)
-      }
-    }
-    loadHistory()
+    getStaffSubmissionHistory().then(d => setHistory(d||[])).catch(console.error).finally(() => setLoading(false))
   }, [])
+
+  const grouped = history.reduce((acc, r) => {
+    const date = new Date(r.date).toLocaleDateString('en-IN', { weekday: 'short', day: 'numeric', month: 'short' })
+    if (!acc[date]) acc[date] = []
+    acc[date].push(r)
+    return acc
+  }, {})
 
   return (
     <PageShell>
-      <div className="min-h-screen pb-20" style={{ background: '#f8fafc' }}>
-        
-        {/* Header */}
-        <div className="bg-white sticky top-0 z-30 shadow-sm border-b border-gray-100">
+      <div className="min-h-screen pb-24 bg-slate-50">
+        <div className="bg-white border-b border-slate-100 sticky top-0 z-30">
           <div className="max-w-2xl mx-auto px-4 py-4 flex items-center gap-3">
-            <button
-              onClick={() => navigate('/staff/agencies')}
-              className="w-9 h-9 rounded-xl bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition-colors shrink-0"
-            >
-              <svg className="w-4 h-4 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
-              </svg>
+            <button onClick={() => navigate('/staff/agencies')}
+              className="w-9 h-9 rounded-xl bg-slate-100 hover:bg-slate-200 flex items-center justify-center transition-colors shrink-0">
+              <svg className="w-4 h-4 text-slate-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}><path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7"/></svg>
             </button>
             <div>
-              <h1 className="text-lg font-black text-gray-900 leading-tight">Submission History</h1>
-              <p className="text-xs text-gray-500 font-medium">Your recent stock entries</p>
+              <h1 className="text-base font-semibold text-slate-900">Submission History</h1>
+              <p className="text-xs text-slate-400">Your past stock entries</p>
             </div>
           </div>
         </div>
 
-        {/* Content */}
-        <div className="max-w-2xl mx-auto px-4 pt-6">
+        <div className="max-w-2xl mx-auto px-4 pt-5">
           {loading ? (
             <div className="flex justify-center py-16"><Spinner /></div>
           ) : history.length === 0 ? (
-            <div className="text-center py-20">
-              <div className="text-4xl mb-3">📭</div>
-              <p className="text-gray-500 font-medium text-sm">No submissions found.</p>
+            <div className="flex flex-col items-center py-20 gap-3">
+              <div className="w-14 h-14 rounded-3xl bg-slate-100 flex items-center justify-center">
+                <svg className="w-6 h-6 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+              </div>
+              <p className="text-slate-400 text-sm">No submissions yet.</p>
             </div>
           ) : (
-            <div className="flex flex-col gap-3">
-              {history.map((record) => (
-                <button 
-                  key={record.id} 
-                  onClick={() => navigate(`/staff/history/${record.id}`)}
-                  className="w-full text-left bg-white rounded-2xl p-4 border border-gray-100 shadow-sm hover:shadow-md hover:border-gray-200 transition-all active:scale-95 flex items-center justify-between group"
-                >
-                  <div className="flex-1">
-                    <div className="flex justify-between items-start mb-2">
-                      <p className="text-[15px] font-bold text-gray-900">{record.agency_name}</p>
-                      <span className="text-[11px] font-bold text-gray-400 uppercase tracking-wider bg-gray-50 px-2 py-1 rounded-md">
-                        {new Date(record.date).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}
-                      </span>
-                    </div>
-                    <div className="flex items-center gap-2 text-sm text-gray-600">
-                      <svg className="w-4 h-4 text-brand-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
-                      </svg>
-                      <span className="font-semibold">{record.total_items} items entered</span>
-                    </div>
+            <div className="flex flex-col gap-6">
+              {Object.entries(grouped).map(([date, records]) => (
+                <div key={date}>
+                  <div className="flex items-center gap-3 mb-3">
+                    <p className="text-xs font-medium text-slate-400 uppercase tracking-widest">{date}</p>
+                    <div className="flex-1 h-px bg-slate-100" />
+                    <span className="text-xs text-slate-400">{records.length}</span>
                   </div>
-                  
-                  {/* Arrow Icon indicating it is clickable */}
-                  <div className="shrink-0 ml-4 w-8 h-8 rounded-xl bg-gray-50 text-gray-400 group-hover:bg-brand-50 group-hover:text-brand-600 flex items-center justify-center transition-colors">
-                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-                    </svg>
+                  <div className="flex flex-col gap-2">
+                    {records.map(record => (
+                      <button key={record.id} onClick={() => navigate(`/staff/history/${record.id}`)}
+                        className="group w-full text-left bg-white rounded-2xl px-4 py-3.5 border border-slate-100 shadow-sm hover:shadow-md active:scale-[0.98] transition-all flex items-center gap-3">
+                        <div className="w-9 h-9 rounded-xl bg-brand-50 flex items-center justify-center shrink-0">
+                          <svg className="w-4 h-4 text-brand-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2"/></svg>
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-medium text-slate-900 truncate">{record.agency_name}</p>
+                          <p className="text-xs text-slate-400 mt-0.5">{record.total_items} items entered</p>
+                        </div>
+                        <svg className="w-4 h-4 text-slate-300 group-hover:text-brand-600 transition-colors shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}><path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7"/></svg>
+                      </button>
+                    ))}
                   </div>
-                </button>
+                </div>
               ))}
             </div>
           )}

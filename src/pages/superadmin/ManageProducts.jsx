@@ -657,11 +657,11 @@ export default function ManageProducts() {
             {Object.entries(grouped).map(([agencyName, items]) => {
               const isCollapsed = collapsed[agencyName] && !isFiltering
               return (
-                <div key={agencyName} className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+                <div key={agencyName} className="bg-white rounded-2xl border border-slate-100 shadow-sm">
                   {/* group header */}
                   <button
                     onClick={() => toggleGroup(agencyName)}
-                    className="w-full flex items-center justify-between px-4 py-3.5 hover:bg-slate-50 transition-colors"
+                    className="w-full flex items-center justify-between px-4 py-3.5 hover:bg-slate-50 transition-colors rounded-t-2xl"
                   >
                     <div className="flex items-center gap-3">
                       <div className="w-9 h-9 rounded-xl bg-brand-50 flex items-center justify-center text-sm font-black text-brand-700 shrink-0">
