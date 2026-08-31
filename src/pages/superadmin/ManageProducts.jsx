@@ -19,7 +19,7 @@ import Alert from '../../components/ui/alert'
 function Field({ label, children, hint }) {
   return (
     <div className="flex flex-col gap-1.5">
-      <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">{label}</label>
+      <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider">{label}</label>
       {children}
       {hint && <p className="text-xs text-slate-400">{hint}</p>}
     </div>
@@ -149,7 +149,7 @@ function BulkAddSheet({ open, onClose, onDone, agencies, existingProducts }) {
         {/* header */}
         <div className="px-5 pt-5 pb-4 border-b border-slate-100 flex items-center justify-between">
           <div>
-            <h2 className="text-lg font-black text-slate-900">Bulk Add Products</h2>
+            <h2 className="text-lg font-semibold text-slate-900">Bulk Add Products</h2>
             <p className="text-xs text-slate-400 mt-0.5">Select agency once · add many products fast</p>
           </div>
           {phase !== 'running' && (
@@ -190,7 +190,7 @@ function BulkAddSheet({ open, onClose, onDone, agencies, existingProducts }) {
               {queue.length > 0 && (
                 <div className="flex flex-col gap-2">
                   <div className="flex items-center justify-between">
-                    <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">
+                    <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">
                       Queue · {queue.length}
                     </span>
                     <button onClick={() => setQueue([])} className="text-xs font-semibold text-slate-400 hover:text-red-500 transition-colors">
@@ -271,7 +271,7 @@ function BulkAddSheet({ open, onClose, onDone, agencies, existingProducts }) {
                 {results.failed.length === 0 ? '✅' : '⚠️'}
               </div>
               <div className="text-center">
-                <p className="text-lg font-black text-slate-900">{results.ok} product{results.ok !== 1 ? 's' : ''} created</p>
+                <p className="text-lg font-semibold text-slate-900">{results.ok} product{results.ok !== 1 ? 's' : ''} created</p>
                 {results.failed.length > 0 && (
                   <p className="text-sm text-red-600 font-medium mt-1">{results.failed.length} failed</p>
                 )}
@@ -280,7 +280,7 @@ function BulkAddSheet({ open, onClose, onDone, agencies, existingProducts }) {
                 <div className="w-full max-h-36 overflow-y-auto flex flex-col gap-1.5">
                   {results.failed.map(f => (
                     <div key={f.name} className="text-xs bg-red-50 border border-red-100 rounded-xl px-3 py-2">
-                      <span className="font-bold text-red-700">{f.name}</span>
+                      <span className="font-semibold text-red-700">{f.name}</span>
                       <span className="text-red-500"> — {f.err}</span>
                     </div>
                   ))}
@@ -431,8 +431,8 @@ function DeleteModal({ open, onClose, onSuccess, product }) {
         <div className="flex items-center gap-3 p-4 bg-red-50 rounded-2xl">
           <div className="w-10 h-10 rounded-xl bg-red-100 flex items-center justify-center text-xl shrink-0">⚠️</div>
           <p className="text-sm text-red-700">
-            Delete <span className="font-bold">{product?.name}</span>? This cannot be undone.
-            If this product has past submissions, consider marking it <span className="font-bold">Inactive</span> instead.
+            Delete <span className="font-semibold">{product?.name}</span>? This cannot be undone.
+            If this product has past submissions, consider marking it <span className="font-semibold">Inactive</span> instead.
           </p>
         </div>
         {error && <Alert type="error" message={error} />}
@@ -547,7 +547,7 @@ export default function ManageProducts() {
             </svg>
           </button>
           <div className="flex-1 min-w-0">
-            <h1 className="text-lg font-black text-slate-900 leading-tight">Manage Products</h1>
+            <h1 className="text-lg font-semibold text-slate-900 leading-tight">Manage Products</h1>
             <p className="text-xs text-slate-400">{products.length} total · {activeCount} active</p>
           </div>
 
@@ -555,7 +555,7 @@ export default function ManageProducts() {
           <div className="relative">
             <button
               onClick={() => setAddMenuOpen(v => !v)}
-              className="flex items-center gap-2 bg-brand-600 hover:bg-brand-700 text-white text-sm font-bold px-4 py-2.5 rounded-xl transition-colors shadow-sm shadow-brand-600/30 active:scale-95"
+              className="flex items-center gap-2 bg-brand-600 hover:bg-brand-700 text-white text-sm font-semibold px-4 py-2.5 rounded-xl transition-colors shadow-sm shadow-brand-600/30 active:scale-95"
             >
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
@@ -573,7 +573,7 @@ export default function ManageProducts() {
                     onClick={() => { setAddMenuOpen(false); setBulkOpen(true) }}
                     className="w-full flex flex-col items-start px-4 py-3 hover:bg-slate-50 text-left"
                   >
-                    <span className="text-sm font-bold text-slate-800">⚡ Bulk Add</span>
+                    <span className="text-sm font-semibold text-slate-800">⚡ Bulk Add</span>
                     <span className="text-xs text-slate-400">Many products, one agency</span>
                   </button>
                   <div className="h-px bg-slate-100" />
@@ -581,7 +581,7 @@ export default function ManageProducts() {
                     onClick={() => { setAddMenuOpen(false); setAddOpen(true) }}
                     className="w-full flex flex-col items-start px-4 py-3 hover:bg-slate-50 text-left"
                   >
-                    <span className="text-sm font-bold text-slate-800">＋ Single Product</span>
+                    <span className="text-sm font-semibold text-slate-800">＋ Single Product</span>
                     <span className="text-xs text-slate-400">Add one product</span>
                   </button>
                 </div>
@@ -601,7 +601,7 @@ export default function ManageProducts() {
           ].map(({ label, value, accent, bar }) => (
             <div key={label} className="bg-white rounded-2xl border border-slate-100 p-4 shadow-sm relative overflow-hidden">
               <div className={`absolute left-0 top-0 bottom-0 w-1 ${bar}`} />
-              <p className={`text-2xl font-black ${accent}`}>{value}</p>
+              <p className={`text-2xl font-semibold ${accent}`}>{value}</p>
               <p className="text-slate-400 text-[11px] font-semibold uppercase tracking-wider mt-0.5">{label}</p>
             </div>
           ))}
@@ -664,11 +664,11 @@ export default function ManageProducts() {
                     className="w-full flex items-center justify-between px-4 py-3.5 hover:bg-slate-50 transition-colors rounded-t-2xl"
                   >
                     <div className="flex items-center gap-3">
-                      <div className="w-9 h-9 rounded-xl bg-brand-50 flex items-center justify-center text-sm font-black text-brand-700 shrink-0">
+                      <div className="w-9 h-9 rounded-xl bg-brand-50 flex items-center justify-center text-sm font-semibold text-brand-700 shrink-0">
                         {agencyName.slice(0, 2).toUpperCase()}
                       </div>
                       <div className="text-left">
-                        <p className="text-sm font-black text-slate-900">{agencyName}</p>
+                        <p className="text-sm font-semibold text-slate-900">{agencyName}</p>
                         <p className="text-xs text-slate-400">{items.length} product{items.length !== 1 ? 's' : ''}</p>
                       </div>
                     </div>
@@ -693,7 +693,7 @@ export default function ManageProducts() {
                             <p className={`text-sm font-semibold truncate ${p.is_active ? 'text-slate-900' : 'text-slate-400'}`}>{p.name}</p>
                           </div>
                           {!p.is_active && (
-                            <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 bg-slate-100 px-2 py-0.5 rounded-full">Inactive</span>
+                            <span className="text-[10px] font-semibold uppercase tracking-wider text-slate-400 bg-slate-100 px-2 py-0.5 rounded-full">Inactive</span>
                           )}
                           <ActionMenu product={p} onEdit={setEditTarget} onDelete={setDeleteTarget} />
                         </div>

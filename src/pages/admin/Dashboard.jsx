@@ -54,7 +54,7 @@ export default function AdminDashboard() {
                 <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}><path strokeLinecap="round" strokeLinejoin="round" d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>
               </div>
               <div>
-                <p className="text-xs text-white/60">Admin Panel</p>
+                <p className="text-xs text-white/60">{user?.role === 'super_admin' ? 'Super Admin' : 'Admin Panel'}</p>
                 <p className="text-sm font-semibold text-white leading-none">Stock Portal</p>
               </div>
             </div>

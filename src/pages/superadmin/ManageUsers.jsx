@@ -34,7 +34,7 @@ const ROLE_META = {
 function RoleBadge({ role }) {
   const m = ROLE_META[role] ?? { label: role, bg: 'bg-gray-100', text: 'text-gray-600', dot: 'bg-gray-400' }
   return (
-    <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold ${m.bg} ${m.text}`}>
+    <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold ${m.bg} ${m.text}`}>
       <span className={`w-1.5 h-1.5 rounded-full ${m.dot}`} />
       {m.label}
     </span>
@@ -58,7 +58,7 @@ function Avatar({ name, inactive }) {
   ]
   return (
     <div
-      className={`w-10 h-10 rounded-2xl bg-gradient-to-br ${inactive ? 'from-slate-300 to-slate-400' : palettes[hue]} flex items-center justify-center text-white text-sm font-black shrink-0 shadow-sm ${inactive ? 'opacity-60' : ''}`}
+      className={`w-10 h-10 rounded-2xl bg-gradient-to-br ${inactive ? 'from-slate-300 to-slate-400' : palettes[hue]} flex items-center justify-center text-white text-sm font-semibold shrink-0 shadow-sm ${inactive ? 'opacity-60' : ''}`}
     >
       {initials || '?'}
     </div>
@@ -70,7 +70,7 @@ function Avatar({ name, inactive }) {
 function Field({ label, children }) {
   return (
     <div className="flex flex-col gap-1.5">
-      <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">{label}</label>
+      <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider">{label}</label>
       {children}
     </div>
   )
@@ -263,7 +263,7 @@ function DeactivateModal({ open, onClose, onSuccess, user }) {
         <div className="flex items-center gap-3 p-4 bg-amber-50 rounded-2xl">
           <div className="w-10 h-10 rounded-xl bg-amber-100 flex items-center justify-center text-xl shrink-0">🚫</div>
           <div className="text-sm text-amber-800">
-            <p className="font-bold mb-1">Deactivate {user?.name}?</p>
+            <p className="font-semibold mb-1">Deactivate {user?.name}?</p>
             <p className="text-amber-700">
               They will be logged out immediately and won't be able to sign in again.
               Their submission history stays intact. You can reactivate them anytime.
@@ -276,7 +276,7 @@ function DeactivateModal({ open, onClose, onSuccess, user }) {
           <button
             onClick={handleDeactivate}
             disabled={loading}
-            className="flex-1 bg-amber-500 hover:bg-amber-600 text-white text-sm font-bold py-3 rounded-xl transition-colors disabled:opacity-50"
+            className="flex-1 bg-amber-500 hover:bg-amber-600 text-white text-sm font-semibold py-3 rounded-xl transition-colors disabled:opacity-50"
           >
             {loading ? 'Deactivating…' : 'Deactivate'}
           </button>
@@ -419,12 +419,12 @@ export default function ManageUsers() {
             </svg>
           </button>
           <div className="flex-1 min-w-0">
-            <h1 className="text-lg font-black text-slate-900 leading-tight">Manage Users</h1>
+            <h1 className="text-lg font-semibold text-slate-900 leading-tight">Manage Users</h1>
             <p className="text-xs text-slate-400">{users.length} total · {admins} admins · {staff} staff{inactive > 0 ? ` · ${inactive} deactivated` : ''}</p>
           </div>
           <button
             onClick={() => setAddOpen(true)}
-            className="flex items-center gap-2 bg-brand-600 hover:bg-brand-700 text-white text-sm font-bold px-4 py-2.5 rounded-xl transition-colors shadow-sm shadow-brand-600/30 active:scale-95"
+            className="flex items-center gap-2 bg-brand-600 hover:bg-brand-700 text-white text-sm font-semibold px-4 py-2.5 rounded-xl transition-colors shadow-sm shadow-brand-600/30 active:scale-95"
           >
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
@@ -445,7 +445,7 @@ export default function ManageUsers() {
           ].map(({ label, value, accent, bar }) => (
             <div key={label} className="bg-white rounded-2xl border border-slate-100 p-4 shadow-sm relative overflow-hidden">
               <div className={`absolute left-0 top-0 bottom-0 w-1 ${bar}`} />
-              <p className={`text-2xl font-black ${accent}`}>{value}</p>
+              <p className={`text-2xl font-semibold ${accent}`}>{value}</p>
               <p className="text-slate-400 text-[11px] font-semibold uppercase tracking-wider mt-0.5">{label}</p>
             </div>
           ))}
@@ -518,12 +518,12 @@ export default function ManageUsers() {
                   <Avatar name={u.name ?? u.username} inactive={!isActive} />
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 flex-wrap">
-                      <p className={`text-sm font-bold truncate ${isActive ? 'text-slate-900' : 'text-slate-400'}`}>{u.name}</p>
+                      <p className={`text-sm font-semibold truncate ${isActive ? 'text-slate-900' : 'text-slate-400'}`}>{u.name}</p>
                       {u.id === currentUser?.id && (
-                        <span className="text-xs font-bold text-brand-600 bg-brand-50 px-2 py-0.5 rounded-full">You</span>
+                        <span className="text-xs font-semibold text-brand-600 bg-brand-50 px-2 py-0.5 rounded-full">You</span>
                       )}
                       {!isActive && (
-                        <span className="text-xs font-bold text-amber-600 bg-amber-50 px-2 py-0.5 rounded-full">Deactivated</span>
+                        <span className="text-xs font-semibold text-amber-600 bg-amber-50 px-2 py-0.5 rounded-full">Deactivated</span>
                       )}
                     </div>
                     <div className="flex items-center gap-2 mt-0.5">
