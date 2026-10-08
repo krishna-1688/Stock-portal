@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../../context/authContext'
+import { signInPath } from '../../utils/session'
 import { getAdminCounts, getAgencyStatus } from '../../services/stockService'
 import Spinner from '../../components/ui/spinner'
 import AdminBottomNav from '../../components/layout/AdminBottomNav'
@@ -41,7 +42,7 @@ export default function AdminDashboard() {
   const pendingToday   = statusList.length - submittedToday
   const pct            = statusList.length ? Math.round((submittedToday / statusList.length) * 100) : 0
 
-  const handleLogout = async () => { await logout(); navigate('/login') }
+  const handleLogout = async () => { const to = signInPath(); await logout(); navigate(to) }
 
   return (
     <div className="min-h-screen bg-slate-50">

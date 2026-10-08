@@ -108,6 +108,11 @@ export default function Demo() {
             Works best on a phone; it can be installed like an app from the browser menu.
           </p>
         </div>
+
+        <p className="text-center text-sm text-slate-500 mt-6">
+          Have a shop account?{' '}
+          <button onClick={() => navigate('/login')} className="font-medium text-brand-600 hover:underline">Sign in to your shop</button>
+        </p>
       </div>
     </div>
   )

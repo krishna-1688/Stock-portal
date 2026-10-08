@@ -1,5 +1,6 @@
 import { Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-dom'
 import { useAuth } from './context/authContext.jsx'
+import { signInPath } from './utils/session'
 
 import Login from './pages/Login.jsx'
 import Demo from './pages/Demo.jsx'
@@ -37,7 +38,7 @@ function ProtectedRoute({ children, roles }) {
       <div className="w-8 h-8 border-4 border-brand-600 border-t-transparent rounded-full animate-spin" />
     </div>
   )
-  if (!user) return <Navigate to="/login" replace />
+  if (!user) return <Navigate to={signInPath()} replace />
   if (roles && !roles.includes(user.role)) return <Navigate to="/" replace />
   return children
 }
@@ -49,7 +50,7 @@ function HomeRedirect() {
       <div className="w-8 h-8 border-4 border-brand-600 border-t-transparent rounded-full animate-spin" />
     </div>
   )
-  if (!user) return <Navigate to="/login" replace />
+  if (!user) return <Navigate to={signInPath()} replace />
   if (user.role === 'super_admin') return <Navigate to="/super/dashboard" replace />
   if (user.role === 'admin') return <Navigate to="/admin/dashboard" replace />
   return <Navigate to="/staff/agencies" replace />
