@@ -16,7 +16,7 @@ ships with migration 003 / the `multi-tenant` branch · **Open**, needs a decisi
 | 1 | Critical | Staff submission history/detail readable **without logging in** | Fixed (live) |
 | 2 | Critical | No shop isolation, so a second client would have seen the first client's data | Fixed (live) |
 | 3 | High | Deactivated users could still log in | Fixed (live) |
-| 4 | High | Unlimited password guessing on shop and owner logins | Fixed (pending: 003, then 004) |
+| 4 | High | Unlimited password guessing on shop and owner logins | Fixed (003 live: per-username lock; 005: per-IP limit; then 004) |
 | 5 | High | Weak password hashing (bcrypt cost 6) | Fixed (pending: 003, auto-upgrades) |
 | 6 | High | No real backups (in-database copy only) | **Open** |
 | 7 | High | Platform owner account: single password, was shared in chat | **Open: change password** |
@@ -25,7 +25,7 @@ ships with migration 003 / the `multi-tenant` branch · **Open**, needs a decisi
 | 10 | Medium | No audit log of admin actions | Open |
 | 11 | Medium | Missing browser security headers (clickjacking etc.) | Fixed (pending: branch) |
 | 12 | Medium | No size limits on names, item lists, quantities | Fixed (pending: 003) |
-| 13 | Medium | Lockout can be abused to lock a known user out for 15 min | Accepted trade-off |
+| 13 | Medium | Lockout can be abused to lock a known user out for 15 min | Accepted trade-off (demo accounts exempt) |
 | 14 | Medium | Shop users' minimum password length is 6 | Open |
 | 15 | Low | `react-router` advisory (GHSA-qwww-vcr4-c8h2) | Fixed (pending: branch) |
 | 16 | Low | Username enumeration (timing, "username taken" across shops) | Accepted |
@@ -35,6 +35,8 @@ ships with migration 003 / the `multi-tenant` branch · **Open**, needs a decisi
 | 20 | Low | `supabase api.txt` on the Desktop | Check it (not opened by the audit) |
 | 21 | Low | WhatsApp number inserted into a URL unescaped | Fixed (pending: branch) |
 | 22 | Info | Staff can view the whole shop's submission history | Business decision |
+| 23 | Medium | Public demo with published passwords | Mitigated (005) |
+| 24 | Low | Real client's shop name visible in the public repo | Decide |
 
 ## Details
 
@@ -58,7 +60,10 @@ Login errors were raised as exceptions, which roll back the transaction, so fail
 attempts could not even be counted. **Fix (003):** `login_v2` / `platform_login_v2` return
 errors instead of raising, record failures in `login_attempts`, and lock a username
 for 15 minutes after **8** failures (shop) or **5** (owner). The frontend uses them
-automatically. **Action:** run `004_remove_legacy_login.sql` about a week after go-live.
+automatically. **005** adds a per-IP limit: 30 failed logins from one address (any usernames) block
+that address for 15 minutes (10 for the owner login), which stops password spraying. The IP comes
+from `cf-connecting-ip`, set by Cloudflare in front of Supabase, so a browser can't fake it.
+**Action:** run `004_remove_legacy_login.sql` about a week after go-live.
 Until then the old `login()` remains as an unprotected path.
 
 ### 5. Weak password hashing (High, fixed pending)
@@ -145,6 +150,20 @@ delete the file. Those two secrets bypass every protection above.
 
 ### 21. WhatsApp URL (Low, fixed pending)
 The agency's number is now reduced to digits before building the `wa.me` link.
+
+### 23. Public demo (Medium, mitigated)
+The demo passwords are published on GitHub. **Mitigations (005):** Demo Mart is an ordinary
+isolated shop (same cross-shop tests). A database trigger makes its users read-only, so nobody
+can lock or take over the demo accounts. Row caps (40 agencies, 400 products, 1,000
+submissions/orders) stop flooding. Demo agencies are forced to an invalid WhatsApp number, so
+orders never reach a real person. Demo accounts are exempt from the per-username lock but not
+from the IP limit, and the data resets nightly (pg_cron). Visitors can still type rude text into
+names until the next reset; suspend Demo Mart from `/platform` if it's abused.
+
+### 24. Client name in the public repo (Low, decide)
+`db/001_multi_tenant.sql`, the tests and the runbook mention the real client's shop name, and
+the git history contains it. If that should stay private, make the repository private (Vercel
+deploys keep working) or replace the name in future commits. History would still need a rewrite.
 
 ## What is already solid
 - RLS enabled on every table, **no** policies, and all table privileges revoked from
