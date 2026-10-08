@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../../context/authContext'
+import { signInPath } from '../../utils/session'
 import { getSuperAdminCounts } from '../../services/stockService'
 import Spinner from '../../components/ui/spinner'
 
@@ -21,7 +22,7 @@ export default function SuperDashboard() {
     getSuperAdminCounts().then(d => setCounts(d?.[0])).catch(console.error).finally(() => setLoading(false))
   }, [])
 
-  const handleLogout = async () => { await logout(); navigate('/login') }
+  const handleLogout = async () => { const to = signInPath(); await logout(); navigate(to) }
 
   const stats = counts ? [
     { label: 'Staff accounts', value: counts.total_staff, color: '#1B5E37' },

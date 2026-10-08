@@ -1,4 +1,5 @@
 import { useAuth } from '../../context/authContext'
+import { signInPath } from '../../utils/session'
 import { useNavigate } from 'react-router-dom'
 
 export default function Navbar({ title }) {
@@ -6,8 +7,9 @@ export default function Navbar({ title }) {
   const navigate = useNavigate()
 
   const handleLogout = async () => {
+    const to = signInPath()
     await logout()
-    navigate('/login')
+    navigate(to)
   }
 
   return (

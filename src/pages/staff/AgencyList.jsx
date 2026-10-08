@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../../context/authContext'
+import { signInPath } from '../../utils/session'
 import { getActiveAgencies } from '../../services/agencyService'
 import Spinner from '../../components/ui/spinner'
 import PageShell from '../../components/layout/PageShell'
@@ -30,7 +31,7 @@ export default function AgencyList() {
       .finally(() => setLoading(false))
   }, [])
 
-  const handleLogout = async () => { await logout(); navigate('/login') }
+  const handleLogout = async () => { const to = signInPath(); await logout(); navigate(to) }
 
   return (
     <PageShell>
