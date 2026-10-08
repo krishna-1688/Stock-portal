@@ -24,19 +24,15 @@ export default defineConfig(({ command, mode }) => {
         name: 'Stock Collection Portal',
         short_name: 'Stock Portal',
         description: 'Agency stock count collection for store staff and admins',
-        theme_color: '#16a34a',
         background_color: '#ffffff',
         display: 'standalone',
         orientation: 'portrait',
         start_url: '/',
-        // /icons/icon-*.png never existed in public/, so the PWA had no icon
+        theme_color: '#1B5E37',
         icons: [
-          {
-            src: '/favicon.svg',
-            sizes: 'any',
-            type: 'image/svg+xml',
-            purpose: 'any'
-          }
+          { src: '/icons/icon-192.png', sizes: '192x192', type: 'image/png', purpose: 'any' },
+          { src: '/icons/icon-512.png', sizes: '512x512', type: 'image/png', purpose: 'any' },
+          { src: '/icons/icon-maskable-512.png', sizes: '512x512', type: 'image/png', purpose: 'maskable' }
         ]
       },
       workbox: {

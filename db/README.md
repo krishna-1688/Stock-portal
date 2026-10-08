@@ -10,6 +10,7 @@ change to them, in order.
 | `001_multi_tenant.sql` | The migration: shops, `shop_id`, platform owner, shop-scoped functions, security fixes. | Yes, step 3 |
 | `002_create_platform_owner.sql` | Creates **your** platform-owner login. | Yes, step 4 (edit first) |
 | `003_whatsapp_orders_and_hardening.sql` | WhatsApp order history, login lockout, bcrypt cost 10, size limits. | Yes, after the new frontend is live |
+| `005_demo_shop_and_ip_rate_limit.sql` | Public demo shop "Demo Mart" + per-IP login rate limit. | Yes, after 003 |
 | `004_remove_legacy_login.sql` | Removes the old unprotected `login()` / `platform_login()`. | Yes, about 1 week after 003 |
 | `rollback_001.sql` | Emergency undo of 001. Refuses to run once a second shop exists. | Only if something goes wrong |
 | `rollback_003.sql` | Emergency undo of 003 (deletes WhatsApp order history). | Only if something goes wrong |
@@ -68,7 +69,8 @@ Do this when the shop is closed (e.g. late night). The SQL takes seconds.
 | 001 migration | ✅ 2026-10-08 (all counts matched after) |
 | 002 platform owner | ✅ `krishna_kk` |
 | Frontend `multi-tenant` branch | Preview verified; merge to `main` to go live |
-| 003 | Pending: run after the merge |
+| 003 | ✅ applied |
+| 005 | Pending |
 | 004 | Pending: about one week after 003 |
 
 ## 003 / 004 steps
@@ -79,6 +81,18 @@ Do this when the shop is closed (e.g. late night). The SQL takes seconds.
 3. Log in once as each role. Send one WhatsApp order from an agency page and check
    it appears under Super Admin → WhatsApp Orders.
 4. About a week later, run `004_remove_legacy_login.sql`.
+
+## 005 steps (demo shop + IP rate limit)
+
+1. Run `005_demo_shop_and_ip_rate_limit.sql` in the SQL Editor. Expect "Success".
+   It refuses to run if a real user already has a `demo_*` username.
+2. Open `/demo` on the live site and enter as each role.
+3. **Nightly reset.** Supabase → **Database → Extensions** → enable **pg_cron**, then run once:
+   ```sql
+   select cron.schedule('reset-demo-shop', '30 20 * * *', 'select public.reset_demo_shop()');
+   ```
+   (20:30 UTC = 2:00 AM IST.) To reset by hand at any time: `select public.reset_demo_shop();`
+4. To take the demo offline: suspend "Demo Mart" from `/platform`.
 
 ## Onboarding a new shop
 

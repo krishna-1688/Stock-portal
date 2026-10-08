@@ -1,7 +1,10 @@
 const TOKEN_KEY = 'stock_portal_token'
 const USER_KEY = 'stock_portal_user'
-const LAST_SHOP_KEY = 'stock_portal_last_shop'
 const PLATFORM_TOKEN_KEY = 'stock_portal_platform_token'
+
+// Older versions remembered the last shop's name for the login screen; the login
+// screen is now neutral, so drop that leftover from devices that still have it.
+try { localStorage.removeItem('stock_portal_last_shop') } catch { /* storage unavailable */ }
 
 function readJson(key) {
   try {
@@ -23,21 +26,11 @@ export function getStoredUser() {
 export function saveSession(token, user) {
   localStorage.setItem(TOKEN_KEY, token)
   localStorage.setItem(USER_KEY, JSON.stringify(user))
-  if (user.shopName) saveLastShop(user)
 }
 
 export function clearSession() {
   localStorage.removeItem(TOKEN_KEY)
   localStorage.removeItem(USER_KEY)
-}
-
-// Branding of the shop that last used this device, shown on the login screen.
-export function getLastShop() {
-  return readJson(LAST_SHOP_KEY)
-}
-
-export function saveLastShop({ shopName, supportContact }) {
-  localStorage.setItem(LAST_SHOP_KEY, JSON.stringify({ shopName, supportContact }))
 }
 
 // Platform owner session — kept apart from shop sessions.

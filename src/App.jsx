@@ -1,7 +1,8 @@
-import { Routes, Route, Navigate } from 'react-router-dom'
+import { Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-dom'
 import { useAuth } from './context/authContext.jsx'
 
 import Login from './pages/Login.jsx'
+import Demo from './pages/Demo.jsx'
 
 // Staff
 import StaffSubmissionDetail from './pages/staff/StaffSubmissionDetail.jsx'
@@ -54,10 +55,31 @@ function HomeRedirect() {
   return <Navigate to="/staff/agencies" replace />
 }
 
+// Thin strip shown only inside the public demo shop (db/005)
+function DemoBanner() {
+  const { user, logout } = useAuth()
+  const navigate = useNavigate()
+  const { pathname } = useLocation()
+  if (user?.shopCode !== 'demo' || pathname === '/demo') return null
+  const switchRole = async () => { await logout(); navigate('/demo') }
+  return (
+    <div className="bg-amber-50 border-b border-amber-100 text-amber-800 text-xs">
+      <div className="max-w-lg mx-auto px-4 py-2 flex items-center gap-2">
+        <span className="font-medium">Demo shop</span>
+        <span className="text-amber-700/80 truncate">Shared sandbox · resets nightly</span>
+        <button onClick={switchRole} className="ml-auto shrink-0 font-medium underline underline-offset-2">Switch role</button>
+      </div>
+    </div>
+  )
+}
+
 export default function App() {
   return (
+    <>
+    <DemoBanner />
     <Routes>
       <Route path="/login" element={<Login />} />
+      <Route path="/demo" element={<Demo />} />
       <Route path="/" element={<HomeRedirect />} />
 
       {/* Staff */}
@@ -87,5 +109,6 @@ export default function App() {
 
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
+    </>
   )
 }

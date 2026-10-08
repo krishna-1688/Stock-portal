@@ -8,7 +8,7 @@
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "test:db": "node db/tests/test_migration.mjs && node db/tests/test_rollback.mjs && node db/tests/test_003.mjs && node db/tests/check_contract.mjs"
+    "test:db": "node db/tests/test_migration.mjs && node db/tests/test_rollback.mjs && node db/tests/test_003.mjs && node db/tests/test_005.mjs && node db/tests/check_contract.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.108.2",
