@@ -5,7 +5,7 @@ import reactRefresh from 'eslint-plugin-react-refresh'
 import { defineConfig, globalIgnores } from 'eslint/config'
 
 export default defineConfig([
-  globalIgnores(['dist']),
+  globalIgnores(['dist', 'dev-dist']),
   {
     files: ['**/*.{js,jsx}'],
     extends: [
@@ -17,5 +17,17 @@ export default defineConfig([
       globals: globals.browser,
       parserOptions: { ecmaFeatures: { jsx: true } },
     },
+    rules: {
+      // Pages reset form/loading state in effects; this newer advisory rule flags
+      // that pattern. Kept visible as a warning rather than rewriting stable screens.
+      'react-hooks/set-state-in-effect': 'warn',
+      // authContext exports the provider together with its useAuth hook.
+      'react-refresh/only-export-components': ['error', { allowConstantExport: true, allowExportNames: ['useAuth'] }],
+    },
+  },
+  {
+    // build config and database test scripts run in Node
+    files: ['vite.config.js', 'db/**/*.mjs'],
+    languageOptions: { globals: globals.node },
   },
 ])

@@ -1,8 +1,19 @@
 {
   "name": "stock-portal",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
+  "description": "Daily stock counts, agency status and WhatsApp orders for retail shops: multi-shop PWA on React and Supabase.",
+  "homepage": "https://stock-portal-kappa.vercel.app",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/krishna-1688/Stock-portal.git"
+  },
+  "author": "Krishna Kumar",
+  "license": "UNLICENSED",
   "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
   "scripts": {
     "dev": "vite",
     "build": "vite build",

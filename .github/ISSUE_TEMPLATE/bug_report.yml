@@ -1,0 +1,40 @@
+name: Bug report
+description: Something in the app or the demo doesn't work as expected
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: Thanks for testing! Security issues? Please use private reporting instead (see SECURITY.md).
+  - type: dropdown
+    id: role
+    attributes:
+      label: Role you were using
+      options: [Staff, Admin, Super Admin, Platform owner, Not logged in]
+    validations:
+      required: true
+  - type: input
+    id: page
+    attributes:
+      label: Page address
+      placeholder: e.g. /admin/agencies/...
+  - type: textarea
+    id: steps
+    attributes:
+      label: What happened?
+      description: What you did, what you expected, and what you saw instead.
+      placeholder: |
+        1. Entered as Admin
+        2. Opened Sunrise Biscuits & Snacks
+        3. ...
+    validations:
+      required: true
+  - type: input
+    id: device
+    attributes:
+      label: Device and browser
+      placeholder: e.g. Android 14, Chrome
+  - type: textarea
+    id: screenshot
+    attributes:
+      label: Screenshot (optional)
+      description: Drag an image in here.

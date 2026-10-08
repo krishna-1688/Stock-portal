@@ -52,7 +52,6 @@ export const getAgencyProductsWithQty = async (agencyId) =>
     p_agency_id: agencyId
   }))
 
-// 👇 ADD THIS NEW FUNCTION 👇
 export const getStaffSubmissionHistory = async () =>
   unwrap(await supabase.rpc('get_staff_submission_history', { 
     p_token: getToken() 
