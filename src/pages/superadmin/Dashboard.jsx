@@ -39,6 +39,7 @@ export default function SuperDashboard() {
   const reportItems = [
     { label: 'Agency Status', desc: 'See which agencies submitted today', path: '/admin/status', color: '#7C3AED' },
     { label: 'Submission History', desc: 'Browse all past stock entries', path: '/admin/history', color: '#0891B2' },
+    { label: 'WhatsApp Orders', desc: 'Orders sent to agencies on WhatsApp', path: '/super/orders', color: '#128C7E' },
   ]
 
   return (
@@ -121,6 +122,7 @@ export default function SuperDashboard() {
                 <svg className="w-4 h-4" style={{ color: item.color }} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                   {item.label === 'Agency Status' && <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>}
                   {item.label === 'Submission History' && <path strokeLinecap="round" strokeLinejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>}
+                  {item.label === 'WhatsApp Orders' && <path strokeLinecap="round" strokeLinejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.86 9.86 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>}
                 </svg>
               </div>
               <div className="flex-1 min-w-0">

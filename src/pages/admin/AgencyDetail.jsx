@@ -7,6 +7,7 @@ import Spinner from '../../components/ui/spinner'
 import AdminBottomNav from '../../components/layout/AdminBottomNav'
 import { useAuth } from '../../context/authContext'
 import { loadDraft, saveDraft, clearDraft } from '../../utils/drafts'
+import { logWhatsappOrder } from '../../services/orderService'
 
 const UNITS = ['pcs','carton','dozen','half dozen','kg','gm','litre','ml','pack','box','bag']
 const saveOrder  = (id, o) => saveDraft('order_draft', id, o)
@@ -86,7 +87,7 @@ export default function AgencyDetail() {
 
   const handleClearAll = () => { setOrder({}); clearOrder(agencyId) }
 
-  const orderedItems = products.filter(p=>(order[p.id]?.qty??0)>0).map(p=>({name:p.name, qty:order[p.id].qty, unit:order[p.id].unit}))
+  const orderedItems = products.filter(p=>(order[p.id]?.qty??0)>0).map(p=>({product_id:p.id, name:p.name, qty:order[p.id].qty, unit:order[p.id].unit}))
   const totalItems = orderedItems.length
   const totalQty   = orderedItems.reduce((s,i)=>s+i.qty, 0)
 
@@ -100,9 +101,13 @@ export default function AgencyDetail() {
     const agencyName = agency?.name ?? agencyNameFromState ?? 'Agency'
     const lines      = orderedItems.map(i=>`• ${i.name} — ${i.qty} ${i.unit}`).join('\n')
     const message    = `🛒 *Order from ${shopName}*\n📅 ${date}\n🏪 ${agencyName}\n\n${lines}\n\nThank you!`
-    window.open(`https://wa.me/${waNumber}?text=${encodeURIComponent(message)}`, '_blank')
+    // Start saving to order history first, then open WhatsApp in the same click
+    // (opening after an await gets blocked as a popup on phones).
+    const logged = logWhatsappOrder(agencyId, orderedItems, message)
+    window.open(`https://wa.me/${waNumber.replace(/\D/g, '')}?text=${encodeURIComponent(message)}`, '_blank', 'noopener')
     clearOrder(agencyId); setOrder({}); setShowPreview(false)
     showToast('Order sent on WhatsApp!')
+    logged.catch(() => showToast("Order sent, but it couldn't be saved to order history."))
   }
 
   const displayName    = agency?.name ?? agencyNameFromState ?? 'Agency'

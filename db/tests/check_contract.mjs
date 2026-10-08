@@ -7,6 +7,7 @@ const db = new PGlite({ extensions: { pgcrypto } })
 await db.exec(`create role anon; create role authenticated;`)
 await db.exec(fs.readFileSync(`${ROOT}db/reference_production_schema.sql`, 'utf8'))
 await db.exec(fs.readFileSync(`${ROOT}db/001_multi_tenant.sql`, 'utf8'))
+await db.exec(fs.readFileSync(`${ROOT}db/003_whatsapp_orders_and_hardening.sql`, 'utf8'))
 const fns = {}
 for (const r of (await db.query(`select proname, proargnames, proargmodes, pronargdefaults, pronargs from pg_proc where pronamespace='public'::regnamespace`)).rows) {
   const names = (r.proargnames ?? []).filter((_, i) => !r.proargmodes || ['i', 'b'].includes(r.proargmodes[i]))
