@@ -7,10 +7,9 @@ import Demo from './pages/Demo.jsx'
 
 // Staff
 import StaffSubmissionDetail from './pages/staff/StaffSubmissionDetail.jsx'
-import StaffDashboard from './pages/staff/Dashboard.jsx'
 import AgencyList from './pages/staff/AgencyList.jsx'
 import StockEntry from './pages/staff/StockEntry.jsx'
-import SubmissionHistory from './pages/staff/SubmissionHistory.jsx' // ← NEW import
+import SubmissionHistory from './pages/staff/SubmissionHistory.jsx'
 
 // Admin
 import AdminDashboard from './pages/admin/Dashboard.jsx'
@@ -85,7 +84,7 @@ export default function App() {
 
       {/* Staff */}
 <Route path="/staff/agencies" element={<ProtectedRoute roles={['staff']}><AgencyList /></ProtectedRoute>} />
-<Route path="/staff/dashboard" element={<ProtectedRoute roles={['staff']}><StaffDashboard /></ProtectedRoute>} />
+<Route path="/staff/dashboard" element={<Navigate to="/staff/agencies" replace />} />
 <Route path="/staff/agencies/:agencyId" element={<ProtectedRoute roles={['staff']}><StockEntry /></ProtectedRoute>} />
 <Route path="/staff/history" element={<ProtectedRoute roles={['staff']}><SubmissionHistory /></ProtectedRoute>} />
 <Route path="/staff/history/:submissionId" element={<ProtectedRoute roles={['staff']}><StaffSubmissionDetail /></ProtectedRoute>} /> 

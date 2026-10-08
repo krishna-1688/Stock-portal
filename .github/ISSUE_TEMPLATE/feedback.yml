@@ -1,0 +1,16 @@
+name: Feedback or idea
+description: Suggest an improvement, or tell us how the demo felt
+labels: [feedback]
+body:
+  - type: textarea
+    id: idea
+    attributes:
+      label: Your feedback
+      description: What would make Stock Portal more useful for your shop?
+    validations:
+      required: true
+  - type: input
+    id: shop
+    attributes:
+      label: Your kind of shop (optional)
+      placeholder: e.g. supermarket with ~30 supplier agencies

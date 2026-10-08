@@ -5,8 +5,6 @@ import { signInPath } from '../../utils/session'
 import { getSuperAdminCounts } from '../../services/stockService'
 import Spinner from '../../components/ui/spinner'
 
-const PALETTE = ['#1B5E37','#2563EB','#7C3AED','#D97706']
-
 export default function SuperDashboard() {
   const { user, logout } = useAuth()
   const navigate = useNavigate()
