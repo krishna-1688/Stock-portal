@@ -23,7 +23,8 @@ dist-ssr
 *.sln
 *.sw?
 
-# Local env overrides (the committed .env holds only the public anon key)
+# Environment (Supabase URL + anon key) — set in Vercel, never committed
+.env
 .env.local
 .env.*.local
 dev-dist
