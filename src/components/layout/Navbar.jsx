@@ -15,9 +15,9 @@ export default function Navbar({ title }) {
       <div className="max-w-2xl mx-auto px-4 h-16 flex items-center justify-between">
         <div className="flex items-center gap-3">
           <div className="w-8 h-8 bg-brand-600 rounded-lg flex items-center justify-center">
-            <span className="text-white text-sm font-bold">S</span>
+            <span className="text-white text-sm font-bold">{(user?.shopName?.trim()?.[0] ?? 'S').toUpperCase()}</span>
           </div>
-          <h1 className="text-lg font-bold text-gray-800">{title || 'Stock Portal'}</h1>
+          <h1 className="text-lg font-bold text-gray-800">{title || user?.shopName || 'Stock Portal'}</h1>
         </div>
         <div className="flex items-center gap-3">
           <span className="text-sm text-gray-500 hidden sm:block">{user?.name}</span>

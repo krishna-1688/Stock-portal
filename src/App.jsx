@@ -24,6 +24,10 @@ import ManageUsers from './pages/superadmin/ManageUsers.jsx'
 import ManageAgencies from './pages/superadmin/ManageAgencies.jsx'
 import ManageProducts from './pages/superadmin/ManageProducts.jsx'
 
+// Platform owner (separate login, not a shop user)
+import PlatformLogin from './pages/platform/PlatformLogin.jsx'
+import PlatformDashboard from './pages/platform/PlatformDashboard.jsx'
+
 function ProtectedRoute({ children, roles }) {
   const { user, loading } = useAuth()
   if (loading) return (
@@ -74,6 +78,10 @@ export default function App() {
       <Route path="/super/users"     element={<ProtectedRoute roles={['super_admin']}><ManageUsers /></ProtectedRoute>} />
       <Route path="/super/agencies"  element={<ProtectedRoute roles={['super_admin']}><ManageAgencies /></ProtectedRoute>} />
       <Route path="/super/products"  element={<ProtectedRoute roles={['super_admin']}><ManageProducts /></ProtectedRoute>} />
+
+      {/* Platform owner */}
+      <Route path="/platform/login" element={<PlatformLogin />} />
+      <Route path="/platform" element={<PlatformDashboard />} />
 
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>

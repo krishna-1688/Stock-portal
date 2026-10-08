@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/authContext'
 import Alert from '../components/ui/alert'
+import { getLastShop } from '../utils/session'
 
 export default function Login() {
   const [username, setUsername] = useState('')
@@ -10,6 +11,7 @@ export default function Login() {
   const [error, setError] = useState('')
   const { login } = useAuth()
   const navigate = useNavigate()
+  const lastShop = getLastShop()
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -39,7 +41,7 @@ export default function Login() {
           </svg>
         </div>
         <h1 className="text-2xl font-semibold text-white mb-1">Stock Portal</h1>
-        <p className="text-white/50 text-sm">Sampath Super Market</p>
+        {lastShop?.shopName && <p className="text-white/50 text-sm">{lastShop.shopName}</p>}
       </div>
 
       {/* Bottom: form card */}
@@ -72,7 +74,9 @@ export default function Login() {
             }
           </button>
         </form>
-        <p className="text-xs text-slate-400 text-center mt-6">Contact admin if you forgot your password</p>
+        <p className="text-xs text-slate-400 text-center mt-6">
+          {lastShop?.supportContact ? `Contact ${lastShop.supportContact} if you forgot your password` : 'Contact admin if you forgot your password'}
+        </p>
       </div>
     </div>
   )
