@@ -6,11 +6,11 @@ import Modal from '../../components/ui/modal'
 import Button from '../../components/ui/button'
 import Spinner from '../../components/ui/spinner'
 import PageShell from '../../components/layout/PageShell'
+import { loadDraft as loadStoredDraft, saveDraft as saveStoredDraft, clearDraft as clearStoredDraft } from '../../utils/drafts'
 
-const DRAFT_KEY = (id) => `stock_draft_${id}`
-const saveDraft  = (id, q) => localStorage.setItem(DRAFT_KEY(id), JSON.stringify(q))
-const loadDraft  = (id) => { try { const r = localStorage.getItem(DRAFT_KEY(id)); return r ? JSON.parse(r) : null } catch { return null } }
-const clearDraft = (id) => localStorage.removeItem(DRAFT_KEY(id))
+const saveDraft  = (id, q) => saveStoredDraft('stock_draft', id, q)
+const loadDraft  = (id) => loadStoredDraft('stock_draft', id)
+const clearDraft = (id) => clearStoredDraft('stock_draft', id)
 
 function QtyInput({ value, onChange }) {
   return (

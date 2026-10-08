@@ -22,3 +22,8 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Local env overrides (the committed .env holds only the public anon key)
+.env.local
+.env.*.local
+dev-dist

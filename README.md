@@ -1,16 +1,36 @@
-# React + Vite
+# Stock Portal
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Multi-shop stock collection app. Staff count agency stock on their phones,
+admins see what's been submitted and send WhatsApp orders, and each shop's
+super admin manages its users, agencies and products. The platform owner
+manages all shops.
 
-Currently, two official plugins are available:
+## Roles
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+| Who | Logs in at | Can |
+| --- | --- | --- |
+| Platform owner | `/platform/login` | Create, edit and suspend shops; manage any shop's users and passwords |
+| Super admin (per shop) | `/login` | Manage the shop's users, agencies and products, plus everything an admin can do |
+| Admin (per shop) | `/login` | Agency status, history, stock view, WhatsApp orders |
+| Staff (per shop) | `/login` | Enter stock counts, view history |
 
-## React Compiler
+Every shop's data is isolated in the database (`shop_id` on every table, and
+every function is scoped to the caller's shop). Usernames are unique across the
+whole platform, so users only need a username and password.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Stack
 
-## Expanding the ESLint configuration
+React 19 + Vite + Tailwind (PWA), Supabase Postgres. The browser only calls
+`SECURITY DEFINER` SQL functions (`supabase.rpc`). Tables have RLS on and no
+direct access.
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## Development
+
+```bash
+npm ci
+cp .env.example .env   # fill in Supabase URL + anon key
+npm run dev
+npm run test:db        # runs migration + isolation + rollback tests on local Postgres (PGlite)
+```
+
+Database changes and the go-live runbook: [`db/README.md`](db/README.md).

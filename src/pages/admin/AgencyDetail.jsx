@@ -5,12 +5,13 @@ import { getAllAgenciesAdmin } from '../../services/agencyService'
 import { getAgencyProductsWithQty } from '../../services/stockService'
 import Spinner from '../../components/ui/spinner'
 import AdminBottomNav from '../../components/layout/AdminBottomNav'
+import { useAuth } from '../../context/authContext'
+import { loadDraft, saveDraft, clearDraft } from '../../utils/drafts'
 
 const UNITS = ['pcs','carton','dozen','half dozen','kg','gm','litre','ml','pack','box','bag']
-const ORDER_KEY  = id => `order_draft_${id}`
-const saveOrder  = (id, o) => localStorage.setItem(ORDER_KEY(id), JSON.stringify(o))
-const loadOrder  = id => { try { const r = localStorage.getItem(ORDER_KEY(id)); return r ? JSON.parse(r) : {} } catch { return {} } }
-const clearOrder = id => localStorage.removeItem(ORDER_KEY(id))
+const saveOrder  = (id, o) => saveDraft('order_draft', id, o)
+const loadOrder  = id => loadDraft('order_draft', id) ?? {}
+const clearOrder = id => clearDraft('order_draft', id)
 
 function ProductRow({ product, stockQty, order, onChange }) {
   const qty  = order?.qty  ?? 0
@@ -49,8 +50,11 @@ export default function AgencyDetail() {
   const { agencyId } = useParams()
   const navigate     = useNavigate()
   const location     = useLocation()
+  const { user }     = useAuth()
+  const shopName     = user?.shopName ?? 'our shop'
   const [products, setProducts] = useState([])
   const [stockMap, setStockMap] = useState({})
+  const [lastSubmittedAt, setLastSubmittedAt] = useState(null)
   const [agency, setAgency]     = useState(null)
   const [loading, setLoading]   = useState(true)
   const [order, setOrder]       = useState({})
@@ -64,9 +68,13 @@ export default function AgencyDetail() {
       .then(([prods, agencies, stockRows]) => {
         setProducts(prods ?? [])
         setAgency(agencies?.find(a=>a.id===agencyId) ?? null)
+        // rows carry the latest submission of the last 4 days (submitted_at is null when none)
+        const rows = stockRows ?? []
+        const latest = rows.find(row => row.submitted_at)?.submitted_at ?? null
         const map = {}
-        ;(stockRows ?? []).forEach(row => { map[row.product_id] = row.quantity })
+        if (latest) rows.forEach(row => { map[row.id] = row.quantity })
         setStockMap(map)
+        setLastSubmittedAt(latest)
         const saved = loadOrder(agencyId)
         if (Object.keys(saved).length > 0) setOrder(saved)
       })
@@ -91,21 +99,21 @@ export default function AgencyDetail() {
     const date       = new Date().toLocaleDateString('en-IN', {day:'numeric',month:'long',year:'numeric'})
     const agencyName = agency?.name ?? agencyNameFromState ?? 'Agency'
     const lines      = orderedItems.map(i=>`• ${i.name} — ${i.qty} ${i.unit}`).join('\n')
-    const message    = `🛒 *Order from Sampath Super Market*\n📅 ${date}\n🏪 ${agencyName}\n\n${lines}\n\nThank you!`
+    const message    = `🛒 *Order from ${shopName}*\n📅 ${date}\n🏪 ${agencyName}\n\n${lines}\n\nThank you!`
     window.open(`https://wa.me/${waNumber}?text=${encodeURIComponent(message)}`, '_blank')
     clearOrder(agencyId); setOrder({}); setShowPreview(false)
     showToast('Order sent on WhatsApp!')
   }
 
   const displayName    = agency?.name ?? agencyNameFromState ?? 'Agency'
-  const submittedToday = Object.keys(stockMap).length > 0
+  const submittedToday = !!lastSubmittedAt && new Date(lastSubmittedAt).toDateString() === new Date().toDateString()
 
   const filtered = products.filter(p => !search || p.name.toLowerCase().includes(search.toLowerCase()))
 
   // Build WA message preview
   const date    = new Date().toLocaleDateString('en-IN', {day:'numeric',month:'long',year:'numeric'})
   const msgLines = orderedItems.map(i=>`• ${i.name} — ${i.qty} ${i.unit}`).join('\n')
-  const previewMsg = `🛒 *Order from Sampath Super Market*\n📅 ${date}\n🏪 ${displayName}\n\n${msgLines}\n\nThank you!`
+  const previewMsg = `🛒 *Order from ${shopName}*\n📅 ${date}\n🏪 ${displayName}\n\n${msgLines}\n\nThank you!`
 
   return (
     <div className="min-h-screen bg-slate-50">

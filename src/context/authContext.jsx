@@ -4,6 +4,20 @@ import { getToken, getStoredUser, saveSession, clearSession } from '../utils/ses
 
 const AuthContext = createContext(null)
 
+// Shape the RPC row (login / validate_session) into the app's user object.
+function toUser(row) {
+  return {
+    id: row.user_id,
+    name: row.name,
+    username: row.username,
+    role: row.role,
+    shopId: row.shop_id,
+    shopName: row.shop_name,
+    shopCode: row.shop_code,
+    supportContact: row.support_contact,
+  }
+}
+
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null)
   const [token, setToken] = useState(null)
@@ -24,7 +38,9 @@ export function AuthProvider({ children }) {
     validateSessionRequest(storedToken)
       .then((fresh) => {
         if (fresh) {
-          setUser({ id: fresh.user_id, name: fresh.name, username: fresh.username, role: fresh.role })
+          const freshUser = toUser(fresh)
+          saveSession(storedToken, freshUser)
+          setUser(freshUser)
         } else {
           clearSession()
           setUser(null)
@@ -41,12 +57,8 @@ export function AuthProvider({ children }) {
 
   const login = useCallback(async (username, password) => {
     const result = await loginRequest(username, password)
-    const loggedInUser = {
-      id: result.user_id,
-      name: result.name,
-      username: result.username,
-      role: result.role
-    }
+    if (!result) throw new Error('Incorrect username or password')
+    const loggedInUser = toUser(result)
     saveSession(result.token, loggedInUser)
     setToken(result.token)
     setUser(loggedInUser)

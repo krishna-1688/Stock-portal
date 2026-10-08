@@ -55,7 +55,7 @@ export default function AdminDashboard() {
               </div>
               <div>
                 <p className="text-xs text-white/60">{user?.role === 'super_admin' ? 'Super Admin' : 'Admin Panel'}</p>
-                <p className="text-sm font-semibold text-white leading-none">Stock Portal</p>
+                <p className="text-sm font-semibold text-white leading-none">{user?.shopName ?? 'Stock Portal'}</p>
               </div>
             </div>
             <button onClick={handleLogout}
