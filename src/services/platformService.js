@@ -1,13 +1,22 @@
 import { supabase } from '../lib/supabase'
 import { getPlatformToken } from '../utils/session'
+import { isMissingFunction } from './authService'
 
 function unwrap({ data, error }) {
   if (error) throw new Error(error.message)
   return data
 }
 
-export const platformLogin = async (username, password) =>
-  unwrap(await supabase.rpc('platform_login', { p_username: username, p_password: password }))?.[0]
+// platform_login_v2 (migration 003) has brute-force lockout; legacy fallback until then.
+export const platformLogin = async (username, password) => {
+  const v2 = await supabase.rpc('platform_login_v2', { p_username: username, p_password: password })
+  if (!v2.error) {
+    if (!v2.data?.ok) throw new Error(v2.data?.error ?? 'Incorrect username or password')
+    return v2.data
+  }
+  if (!isMissingFunction(v2.error)) throw new Error(v2.error.message)
+  return unwrap(await supabase.rpc('platform_login', { p_username: username, p_password: password }))?.[0]
+}
 
 export const platformValidateSession = async () =>
   unwrap(await supabase.rpc('platform_validate_session', { p_token: getPlatformToken() }))?.[0]

@@ -9,7 +9,10 @@ change to them, in order.
 | `000_backup_before_migration.sql` | Copies every table into schema `backup_pre_multitenant`. | Yes, step 2 |
 | `001_multi_tenant.sql` | The migration: shops, `shop_id`, platform owner, shop-scoped functions, security fixes. | Yes, step 3 |
 | `002_create_platform_owner.sql` | Creates **your** platform-owner login. | Yes, step 4 (edit first) |
+| `003_whatsapp_orders_and_hardening.sql` | WhatsApp order history, login lockout, bcrypt cost 10, size limits. | Yes, after the new frontend is live |
+| `004_remove_legacy_login.sql` | Removes the old unprotected `login()` / `platform_login()`. | Yes, about 1 week after 003 |
 | `rollback_001.sql` | Emergency undo of 001. Refuses to run once a second shop exists. | Only if something goes wrong |
+| `rollback_003.sql` | Emergency undo of 003 (deletes WhatsApp order history). | Only if something goes wrong |
 | `tests/` | Runs all of the above on a local Postgres (PGlite): `npm run test:db` | — |
 
 ## How the existing client is protected
@@ -56,6 +59,26 @@ Do this when the shop is closed (e.g. late night). The SQL takes seconds.
      is listed with correct counts.
    - Create a test shop, log in as its super admin, and confirm you see **none**
      of Sampath's data. Then suspend the test shop.
+
+## Status
+
+| Step | Done |
+| --- | --- |
+| 000 backup | ✅ 2026-10-08 (counts matched: 5 users, 22 agencies, 1189 products, 13 submissions, 125 items) |
+| 001 migration | ✅ 2026-10-08 (all counts matched after) |
+| 002 platform owner | ✅ `krishna_kk` |
+| Frontend `multi-tenant` branch | Preview verified; merge to `main` to go live |
+| 003 | Pending: run after the merge |
+| 004 | Pending: about one week after 003 |
+
+## 003 / 004 steps
+
+1. Merge the `multi-tenant` branch so the new frontend is live. It works with or
+   without 003; logins fall back to the old function until 003 exists.
+2. Run `003_whatsapp_orders_and_hardening.sql` in the SQL Editor. Expect "Success".
+3. Log in once as each role. Send one WhatsApp order from an agency page and check
+   it appears under Super Admin → WhatsApp Orders.
+4. About a week later, run `004_remove_legacy_login.sql`.
 
 ## Onboarding a new shop
 

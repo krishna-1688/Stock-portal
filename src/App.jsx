@@ -23,6 +23,7 @@ import SuperDashboard from './pages/superadmin/Dashboard.jsx'
 import ManageUsers from './pages/superadmin/ManageUsers.jsx'
 import ManageAgencies from './pages/superadmin/ManageAgencies.jsx'
 import ManageProducts from './pages/superadmin/ManageProducts.jsx'
+import WhatsappOrders from './pages/superadmin/WhatsappOrders.jsx'
 
 // Platform owner (separate login, not a shop user)
 import PlatformLogin from './pages/platform/PlatformLogin.jsx'
@@ -78,6 +79,7 @@ export default function App() {
       <Route path="/super/users"     element={<ProtectedRoute roles={['super_admin']}><ManageUsers /></ProtectedRoute>} />
       <Route path="/super/agencies"  element={<ProtectedRoute roles={['super_admin']}><ManageAgencies /></ProtectedRoute>} />
       <Route path="/super/products"  element={<ProtectedRoute roles={['super_admin']}><ManageProducts /></ProtectedRoute>} />
+      <Route path="/super/orders"    element={<ProtectedRoute roles={['super_admin']}><WhatsappOrders /></ProtectedRoute>} />
 
       {/* Platform owner */}
       <Route path="/platform/login" element={<PlatformLogin />} />
